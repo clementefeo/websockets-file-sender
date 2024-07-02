@@ -11,7 +11,7 @@ This project implements a WebSocket server that allows clients to subscribe to t
 - libboost-all-dev
 - libssl-dev
 
-## Installation
+## Installation on Ubuntu and Related Distributions
 
 1. Install the required dependencies:
 
@@ -21,8 +21,8 @@ sudo apt install g++ libwebsocketpp-dev libboost-all-dev libssl-dev
 2. Clone the repository:
 
 ```bash
-git clone https://github.com/your-username/websocket-server.git
-cd websocket-server
+git clone https://github.com/clementefeo/websockets-file-sender.git
+cd websockets-file-sender
 ```
 3. Compile the server:
 
