@@ -3,78 +3,86 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WebSocket File Sender</title>
+    <title>File Sender</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
+            font-family: 'Roboto', sans-serif;
+            background-color: #f5f5f5;
             color: #333;
             margin: 0;
-            padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            flex-direction: column;
-            text-align: center;
-        }
-
-        h1 {
-            margin-bottom: 20px;
-        }
-        form {
-            margin-bottom: 20px;
+            padding: 20px;
             display: flex;
             flex-direction: column;
-            align-items: center;
+            min-height: 100vh;
+        }
+        .app-bar {
+            background-color: #6200ee;
+            color: white;
+            padding: 16px;
+            font-size: 20px;
+            font-weight: bold;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin: -20px -20px 20px -20px;
+        }
+        .card {
+            background-color: white;
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 16px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
         }
         .field-group {
-            margin-bottom: 10px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
+            margin-bottom: 16px;
         }
         .field-label {
-            font-weight: bold;
-            margin-bottom: 5px;
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 8px;
         }
         input[type="text"], input[type="file"] {
-            padding: 10px;
-            border: 1px solid #ccc;
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
             border-radius: 4px;
-            margin-top: 5px;
+            font-size: 16px;
+            box-sizing: border-box;
         }
         button {
-            padding: 10px 20px;
-            background-color: #007bff;
-            color: #fff;
+            background-color: #6200ee;
+            color: white;
             border: none;
             border-radius: 4px;
+            padding: 12px 24px;
+            font-size: 16px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
             cursor: pointer;
+            transition: background-color 0.3s;
         }
         button:disabled {
-            background-color: #ccc;
-            cursor: not-allowed;
+            background-color: #bbb;
         }
         .file-info {
-            margin-top: 20px;
-            font-size: 16px;
-            color: #555;
+            font-size: 14px;
+            color: #666;
+            margin-top: 16px;
         }
         .progress-container {
-            width: 100%;
-            max-width: 400px;
-            margin-top: 20px;
+            background-color: #e0e0e0;
+            border-radius: 8px;
+            overflow: hidden;
+            margin-top: 16px;
         }
         .progress-bar {
+            height: 8px;
+            background-color: #6200ee;
             width: 0;
-            height: 20px;
-            background-color: #007bff;
-            border-radius: 10px;
         }
         .progress-text {
+            font-size: 14px;
+            color: #666;
+            margin-top: 8px;
             text-align: center;
-            margin-top: 5px;
         }
         .hidden {
             display: none;
@@ -82,31 +90,38 @@
     </style>
 </head>
 <body>
-    <h1>WebSocket File Sender</h1>
-    <form id="connectionForm">
-        <div class="field-group">
-            <label for="socketURL" class="field-label">WebSocket URL:</label>
-            <input type="text" id="socketURL" placeholder="WebSocket URL" value="ws://localhost:8765">
-        </div>
-        <div class="field-group">
-            <label for="topic" class="field-label">Topic:</label>
-            <input type="text" id="topic" placeholder="Topic" value="chat">
-        </div>
-        <button type="button" id="connectButton">Connect to Server</button>
-    </form>
-    <form id="fileForm" class="hidden">
-        <div class="field-group">
-            <label for="fileInput" class="field-label">Select File:</label>
-            <input type="file" id="fileInput">
-        </div>
-        <button type="submit">Send File</button>
-    </form>
-    <div class="file-info" id="fileInfo"></div>
-    <div class="progress-container">
-        <div class="progress-bar" id="progressBar"></div>
-        <div class="progress-text" id="progressText">&nbsp</div>
+    <div class="app-bar">File Sender</div>
+    <div class="card">
+        <form id="connectionForm">
+            <div class="field-group">
+                <div class="field-label">WebSocket URL</div>
+                <input type="text" id="socketURL" placeholder="ws://localhost:8765" value="ws://localhost:8765">
+            </div>
+            <div class="field-group">
+                <div class="field-label">Topic</div>
+                <input type="text" id="topic" placeholder="chat" value="chat">
+            </div>
+            <button type="button" id="connectButton">Connect to Server</button>
+        </form>
     </div>
-
+    <div class="card hidden" id="fileForm">
+        <form>
+            <div class="field-group">
+                <div class="field-label">Select File</div>
+                <input type="file" id="fileInput">
+            </div>
+            <button type="submit">Send File</button>
+        </form>
+    </div>
+    <div class="card">
+        <div class="file-info" id="fileInfo">Disconnected from server</div>
+        <div id="progressContainer" class="hidden">
+            <div class="progress-container">
+                <div class="progress-bar" id="progressBar"></div>
+            </div>
+            <div class="progress-text" id="progressText"></div>
+        </div>
+    </div>
 <script>
     const connectionForm = document.getElementById('connectionForm');
     const fileForm = document.getElementById('fileForm');
@@ -116,6 +131,7 @@
     const connectButton = document.getElementById('connectButton');
     const sendButton = fileForm.querySelector('button');
     const fileInfo = document.getElementById('fileInfo');
+    const progressContainer = document.getElementById('progressContainer');
     const progressBar = document.getElementById('progressBar');
     const progressText = document.getElementById('progressText');
 
@@ -147,6 +163,7 @@
             fileInfo.textContent = 'Connected to server';
             isConnected = true;
             fileForm.classList.remove('hidden');
+            progressContainer.classList.add('hidden');
         };
 
         socket.onclose = function() {
@@ -163,11 +180,13 @@
         connectButton.textContent = 'Connect to Server';
         fileInfo.textContent = 'Disconnected from server';
         fileForm.classList.add('hidden');
+        progressContainer.classList.add('hidden');
     }
 
     function sendFile() {
         const file = fileInput.files[0];
         if (file) {
+            progressContainer.classList.remove('hidden');
             const reader = new FileReader();
             reader.onprogress = function(event) {
                 if (event.lengthComputable) {
