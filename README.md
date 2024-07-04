@@ -1,8 +1,8 @@
-# WebSocket File Server
+# WebSocket File Exchange Server
 
 ## Description
 
-This project implements a WebSocket server that allows clients to subscribe to topics and exchange files, which are received as messages. It supports configuration via file and command line, and logs activities to a log file or syslog.
+This project implements a WebSocket File Exchange Server that allows clients to subscribe to topics and exchange files, which are received as messages. It supports configuration via file and command line, and logs activities to a log file or syslog.
 
 ## Prerequisites
 
