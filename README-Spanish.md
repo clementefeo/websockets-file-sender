@@ -1,8 +1,8 @@
-# Servidor de Archivos WebSocket
+# Servidor de Intercambio de Ficheros con WebSocket
 
 ## Descripción
 
-Este proyecto implementa un servidor WebSocket que permite a los clientes suscribirse a temas e intercambiar archivos, que se reciben como mensajes. Soporta configuración a través de archivo y línea de comandos, y registra actividades en un archivo de registro o syslog.
+Este proyecto implementa un Servidor de Intercambio de Ficheros con WebSocket que permite a los clientes suscribirse a temas e intercambiar archivos, que se reciben como mensajes. Soporta configuración a través de archivo y línea de comandos, y registra actividades en un archivo de registro o syslog.
 
 ## Prerrequisitos
 
