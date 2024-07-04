@@ -1,4 +1,3 @@
-```markdown
 # Servidor de Archivos WebSocket
 
 ## Descripción
@@ -178,4 +177,3 @@ Por favor, lee CONTRIBUTING.md para detalles sobre nuestro código de conducta y
 
 ## Licencia
 Este proyecto está licenciado bajo la Licencia MIT - ver el archivo LICENSE.md para más detalles.
-```
