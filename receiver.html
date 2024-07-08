@@ -154,15 +154,23 @@
 
             socket.onmessage = function(event) {
                 const messageParts = event.data.split(':');
-                mimeType = messageParts[0];
-                fileName = messageParts[1];
-                fileData = messageParts.slice(2).join(':');
-                console.log('File received');
-                downloadButton.disabled = false;
-                downloadButton.classList.add('file-received');
-                fileInfo.textContent = `Received file: ${fileName}`;
-                updateProgress(100);
-            };
+                if (messageParts.length >= 3) {
+                    mimeType = messageParts[0];
+                    fileName = messageParts[1];
+                    fileData = messageParts.slice(2).join(':');
+                    console.log('File received');
+                    downloadButton.disabled = false;
+                    downloadButton.classList.add('file-received');
+                    fileInfo.textContent = `Received file: ${fileName}`;
+                    updateProgress(100);
+               } else {
+                    console.log('Invalid message format');
+                    fileInfo.textContent = 'Received invalid message format';
+                    downloadButton.disabled = true;
+                    downloadButton.classList.remove('file-received');
+                    updateProgress(0);
+               }
+        };
 
             socket.onclose = function() {
                 console.log('Connection closed.');
